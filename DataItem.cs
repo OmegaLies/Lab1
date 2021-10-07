@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Lab1
 {
@@ -7,9 +8,9 @@ namespace Lab1
     {
         public double X { get; set; }
         public double Y { get; set; }
-        public System.Numerics.Complex C { get; set; }
+        public Complex C { get; set; }
 
-        public DataItem(double a, double b, System.Numerics.Complex i)
+        public DataItem(double a, double b, Complex i)
         {
             X = a;
             Y = b;
@@ -27,7 +28,7 @@ namespace Lab1
         }
     }
 
-    public delegate System.Numerics.Complex FdblComplex(double x, double y);
+    public delegate Complex FdblComplex(double x, double y);
 
     abstract class V1Data
     {
@@ -122,11 +123,11 @@ namespace Lab1
         public int Oy { get; }
         public double Dx { get; }
         public double Dy { get; }
-        public System.Numerics.Complex[,] List { get; }
+        public Complex[,] List { get; }
 
         public V1DataArray(string s, DateTime t) : base(s, t)
         {
-            List = new System.Numerics.Complex[2, 2];
+            List = new Complex[2, 2];
         }
 
         public V1DataArray(string s, DateTime t, int ox, int oy, double dx, double dy, FdblComplex F) : base(s, t)
@@ -135,7 +136,7 @@ namespace Lab1
             Oy = oy;
             Dx = dx;
             Dy = dy;
-            List = new System.Numerics.Complex[Ox, Oy];
+            List = new Complex[Ox, Oy];
             for (int i = 0; i < Ox; ++i)
             {
                 for (int j = 0; j < Oy; ++j)
@@ -151,7 +152,7 @@ namespace Lab1
             get
             {
                 double sum = 0;
-                foreach (System.Numerics.Complex i in List) { sum += i.Magnitude; }
+                foreach (Complex i in List) { sum += i.Magnitude; }
                 return sum / Count;
             }
         }
@@ -161,12 +162,14 @@ namespace Lab1
         }
         public override string ToLongString(string format)
         {
-            string str = $"Type: V1DataArray, Name: {base.Str},  Date: {base.Time}, Count: {Count}, Ox: {Ox}, Oy: {Oy}, Dx: {Dx.ToString(format)}, Dy: {Dy.ToString(format)}\n";
+            string str = $"Type: V1DataArray, Name: {base.Str},  Date: {base.Time}, Count: {Count}," +
+                $" Ox: {Ox}, Oy: {Oy}, Dx: {Dx.ToString(format)}, Dy: {Dy.ToString(format)}\n";
             for (int i = 0; i < Ox; ++i)
             {
                 for (int j = 0; j < Oy; ++j)
                 {
-                    str += $"X: {(Dx * i).ToString(format)}, Y: {(Dy * j).ToString(format)}, Value: {List[i, j].ToString(format)}, Abs: {List[i, j].Magnitude.ToString(format)}\n";
+                    str += $"X: {(Dx * i).ToString(format)}, Y: {(Dy * j).ToString(format)}, " +
+                        $"Value: {List[i, j].ToString(format)}, Abs: {List[i, j].Magnitude.ToString(format)}\n";
                 }
             }
             return str;
